@@ -1,0 +1,57 @@
+#!/usr/bin/env groovy
+
+pipeline {
+  agent {label "master"} // needed that startSlurmAgent can do sh("sbatch")
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr:'10'))
+    timeout(time: 10, unit: 'MINUTES')
+  }
+
+  environment {
+    distro = "centos7"
+    init = startSlurmAgent()
+  }
+  
+  stages {
+	  stage("Build and Test") {
+		  agent { node { label "$BUILD_TAG"} }
+		  // Using 'sequential stages' feature to let stages share workspace
+		  // TODO: The 'stages' block below can use 'parallel' to run many distros at once
+		  stages {
+			  stage("Build Container") {
+				  steps {
+					  sh '.ci/build_containers.sh'
+				  }
+			  }
+			  stage('Build Project') {
+				  steps {
+					  sh '.ci/run_in_container.sh ${distro} /ws/.ci/build_project.sh'
+				  }
+			  }
+			  stage('Run Project') {
+				  steps {
+					  sh '.ci/run_in_container.sh ${distro} /ws/.ci/test_project.sh'
+				  }
+			  }
+		  }
+	  }
+  }
+  post {
+    always {
+      stopSlurmAgents()
+      sh 'sudo chown -R jenkins ${WORKSPACE}'
+      deleteDir()
+    }
+  }
+}
+
+def startSlurmAgent() {
+	echo "starting Agents"
+	sh '.ci/start_slurm_agents.sh'
+}
+
+def stopSlurmAgents() {
+	echo "Stopping Agents"
+	sh '.ci/stop_slurm_agents.sh'
+}

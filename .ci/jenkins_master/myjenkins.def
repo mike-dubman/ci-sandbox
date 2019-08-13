@@ -1,0 +1,90 @@
+Bootstrap: docker
+From: jenkins/jenkins
+
+%environment
+
+export JAVA_OPTS="-Djenkins.install.runSetupWizard=false -Dpermissive-script-security.enabled=no_security"
+export JENKINS_OPTS="-sessionTimeout=120"
+export JENKINS_HOME=/var/jenkins_home
+export JENKINS_UC="https://updates.jenkins.io"
+export JENKINS_PORT=8070
+export JENKINS_HOST="$(hostname)"
+export JENKINS_MASTER_URL="http://${JENKINS_HOST}:${JENKINS_PORT}"
+
+#Set user and password
+export JENKINS_USER=jenkins
+export JENKINS_PASS=jenkins
+
+# Skip initial setup
+export JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+export TZ=Asia/Jerusalem
+
+export MODULEPATH=/hpc/local/etc/modulefiles
+export SINGULARITY_SHELL=/bin/bash
+
+%post
+apt-get update && apt-get -y upgrade 
+apt-get -y install vim tree python-pip python-dev build-essential net-tools curl environment-modules tcl sudo
+pip install python-jenkins jenkins-job-builder 
+apt-get -y install --no-install-recommends git 
+apt-get -y install munge libmunge-dev lua5.1 lua5.1-dev lua5.1-posix bison flex
+ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so.0.0.0 /usr/lib/x86_64-linux-gnu/liblua.so
+chown -R munge /etc/munge
+
+export TZ=Asia/Jerusalem
+ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Install jenkins plugins
+export JENKINS_UC="https://updates.jenkins.io"
+/usr/share/jenkins/ref/plugins.sh /usr/share/jenkins/ref/plugins.txt 
+echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+echo ". /etc/profile.d/modules.sh" >> $SINGULARITY_ENVIRONMENT
+
+#install slurm client
+cd /tmp
+wget -q -O .slurm.tgz https://github.com/SchedMD/slurm/archive/slurm-16-05-5-1.tar.gz
+tar zxvf .slurm.tgz
+cd slurm-slurm-16-05-5-1
+./configure --sysconfdir=/etc/slurm --with-munge
+make -j 10 && make -j 10 install
+
+cd /tmp
+rm -rf slurm-spank-plugins
+git clone https://github.com/grondo/slurm-spank-plugins
+cd slurm-spank-plugins
+
+make -j4 WITH_LUA=1 CFLAGS="-I/usr/include/lua5.1" LIBDIR=/usr/local/lib BINDIR=/usr/local/bin SBINDIR=/usr/local/sbin all
+make -j4 WITH_LUA=1 LIBDIR=/usr/local/lib BINDIR=/usr/local/bin SBINDIR=/usr/local/sbin install
+cat>/etc/ld.so.conf.d/slurm.conf<<EOF
+/usr/local/lib
+/usr/local/lib/slurm
+EOF
+
+usermod -u 2848 -g 101 jenkins
+echo "jenkins ALL=(ALL) NOPASSWD: ALL " >> /etc/sudoers
+ldconfig -c new
+
+%setup
+if [ -d /etc/slurm ]; then
+	cp -pr /etc/slurm ${SINGULARITY_ROOTFS}/etc
+fi
+
+if [ -d /etc/munge ]; then
+	sudo cp -pr /etc/munge ${SINGULARITY_ROOTFS}/etc
+fi
+
+%files
+data/etc /
+data/usr /
+
+# Start jenkins
+%startscript
+/etc/init.d/munge start
+
+# Running with updated configuration
+runuser -p -u jenkins /usr/local/bin/jenkins.sh
+
+%runscript
+#!/bin/bash
+. /etc/profile.d/modules.sh

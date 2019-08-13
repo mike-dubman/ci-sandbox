@@ -1,0 +1,31 @@
+- job-template:
+    name: "{jjb_proj}-pipeline-pr"
+    project-type: pipeline
+    properties:
+        - github:
+            url: "{jjb_git}"
+        - build-discarder:
+            days-to-keep: 50
+            num-to-keep: 20
+        - inject:
+            keep-system-variables: true
+            properties-content: |
+              jjb_proj={jjb_proj}
+    description: Sandbox project
+    concurrent: true
+    sandbox: true
+    pipeline-scm:
+        scm:
+            - git:
+                url: "{jjb_git}"
+                shallow-clone: true
+                browser: githubweb
+                browser-url: "{jjb_git}"
+        script-path: .ci/Jenkinsfile
+
+- project:
+    name: sandbox
+    jjb_proj: sandbox
+    jjb_git: "https://github.com/mike-dubman/ci-sandbox"
+    jobs:
+        - "{jjb_proj}-pipeline-pr"
