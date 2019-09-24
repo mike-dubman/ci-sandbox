@@ -1,0 +1,25 @@
+name: CI-dockers
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dfile: [.ci/Dockerfile.centos7]
+    
+    steps:
+    - uses: ./
+    - name: Run in container ${{ matrix.dfile }}
+      with:
+        file: ${{ matrix.dfile }}
+        myargs: pwd
+    - uses: actions/checkout@v1
+    - name: OS ${{ matrix.dfile }}
+      run: |
+        ./autogen.sh
+        ./configure --prefix=$PWD/install
+        make all
+        make install
