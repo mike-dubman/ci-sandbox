@@ -16,8 +16,6 @@ jobs:
         uses: actions/docker/cli@master
         with:
           args: >
-              --build-arg VCS_REF=${{ github.sha }} \
-              --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
               --tag test build --file .ci/Dockerfile.${{ matrix.distro }} .
 
       - name: Running project build
