@@ -1,0 +1,18 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+    matrix:
+      os: [ubunty-latest, ubuntu-16.04]
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: OS ${{ matrix.os }}
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
