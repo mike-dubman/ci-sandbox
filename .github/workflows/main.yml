@@ -14,5 +14,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: OS ${{ matrix.os }}
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        ./autogen.sh
+        ./configure --prefix=$PWD/install
+        make all
+        make install
