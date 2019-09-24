@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        file: [.ci/Dockerfile.centos7]
+        distro: [centos7]
     
     steps:
       - uses: actions/checkout@v1
@@ -16,12 +16,13 @@ jobs:
         uses: actions/docker/cli@master
         with:
           args: >
-              build -f ${{ matrix.file }} .
+              build . \
+              --build-arg VCS_REF=${{ github.sha }} \
+              --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+              --file .ci/Dockerfile.${{ matrix.distro }} \
+              --tag test
 
-      - name: Running build
-        run: |
-            ls -al
-            ./autogen.sh
-            ./configure --prefix=$PWD/install
-            make all
-            make install
+      - name: Running project build
+        uses: actions/docker/cli@master
+        with:
+            args: run --rm test ./autogen.sh
