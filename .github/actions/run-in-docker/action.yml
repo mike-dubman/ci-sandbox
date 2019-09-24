@@ -9,6 +9,6 @@ inputs:
     default: ''
 runs:
   using: 'docker'
-  image: '.ci/Singularity.centos7'
+  image: ${{ inputs.file }}
   args:
     - ${{ inputs.myargs }}
