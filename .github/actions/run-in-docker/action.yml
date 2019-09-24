@@ -1,15 +1,12 @@
 name: 'Container from Dockerfile'
 description: 'Get started dockerfile'
-author: 'MD'
 inputs: 
   myargs:
     description: 'docker args'
     default: ''
-
   file:
     description: 'Dockerfile name'
     default: ''
-
 runs:
   using: 'docker'
   image: ${{ inputs.file }}
