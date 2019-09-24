@@ -11,17 +11,16 @@ jobs:
         file: [.ci/Dockerfile.centos7]
     
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v1
-      -
-        name: Build docker for ${{ matrix.file }}
-        uses: ./.github/actions/run-in-docker
-            with:
-                file: ${{ matrix.file }}
-                myargs: pwd
-      -   
-        name: Running build
+      - name: Checkout
+      - uses: actions/checkout@v1
+
+      - name: Build docker for ${{ matrix.file }}
+      - uses: ./.github/actions/run-in-docker
+        with:
+          file: ${{ matrix.file }}
+          myargs: pwd
+
+      - name: Running build
         run: |
             ls -al
             ./autogen.sh
