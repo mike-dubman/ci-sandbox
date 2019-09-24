@@ -16,7 +16,7 @@ jobs:
         uses: actions/docker/cli@master
         with:
           args: >
-              build -f ${{ matrix.file }}
+              build -f ${{ matrix.file }} .
 
       - name: Running build
         run: |
