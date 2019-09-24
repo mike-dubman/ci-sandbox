@@ -9,6 +9,6 @@ inputs:
     default: ''
 runs:
   using: 'docker'
-  image: ${{ inputs.file }}
+  image: '${{ inputs.file }}'
   args:
     - ${{ inputs.myargs }}
