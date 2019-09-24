@@ -12,7 +12,6 @@ jobs:
     
     steps:
     - uses: ./
-    - name: Run in container ${{ matrix.dfile }}
       with:
         file: ${{ matrix.dfile }}
         myargs: pwd
