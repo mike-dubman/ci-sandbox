@@ -8,21 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dfile: [.ci/Dockerfile.centos7]
+        file: [.ci/Dockerfile.centos7]
     
     steps:
-    - uses: actions/checkout@v1
-    - uses: ./.github/actions/run-in-docker
-      with:
-        file: ${{ matrix.dfile }}
-        myargs: pwd
-        
-    - name: test
-      run: hostname
-      
-    - name: OS ${{ matrix.dfile }}
-      run: |
-        ./autogen.sh
-        ./configure --prefix=$PWD/install
-        make all
-        make install
+      -
+        name: Checkout
+        uses: actions/checkout@v1
+      -
+        name: Build docker for ${{ matrix.file }}
+        uses: ./.github/actions/run-in-docker
+            with:
+                file: ${{ matrix.file }}
+                myargs: pwd
+      -   
+        name: Running build
+        run: |
+            ls -al
+            ./autogen.sh
+            ./configure --prefix=$PWD/install
+            make all
+            make install
