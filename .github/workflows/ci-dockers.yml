@@ -16,7 +16,7 @@ jobs:
         uses: actions/docker/cli@master
         with:
           args: >
-              --tag test build --file .ci/Dockerfile.${{ matrix.distro }} .
+              build --tag test --file .ci/Dockerfile.${{ matrix.distro }} .
 
       - name: Running project build
         uses: actions/docker/cli@master
