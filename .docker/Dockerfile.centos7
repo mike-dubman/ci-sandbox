@@ -17,4 +17,4 @@ RUN yum install -y \
 
 RUN mkdir /proj
 COPY .git /proj
-RUN cd /proj && git reset --hard HEAD
+RUN cd /proj && ls -al && git reset --hard
