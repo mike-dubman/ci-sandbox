@@ -21,7 +21,6 @@ jobs:
     - name: Build docker
       run: |
         docker build --rm \
-           -w ${GITHUB_WORKSPACE} \
            -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
            -f .docker/Dockerfile.centos7 -t testimg .
 
