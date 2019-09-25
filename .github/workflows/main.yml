@@ -22,6 +22,7 @@ jobs:
       run: |
         pwd
         ls -al
+        
         docker run --rm \
            -w ${GITHUB_WORKSPACE} \
            -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
