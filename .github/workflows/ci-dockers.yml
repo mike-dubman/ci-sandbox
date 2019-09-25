@@ -21,4 +21,4 @@ jobs:
       - name: Running project build
         uses: actions/docker/cli@master
         with:
-            args: run --rm test ./autogen.sh
+            args: run --rm test ls -alR
