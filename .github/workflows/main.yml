@@ -3,9 +3,9 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
+  build_all:
     name: Run smoketest
-    runs-on: ubunty-latest
+    runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v1
