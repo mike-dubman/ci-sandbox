@@ -20,9 +20,9 @@ jobs:
       - name: Build project in container
         uses: actions/docker/cli@master
         with:
-            args: run ci-proj-${{ github.sha }}:latest cd /proj/.ci/build_project.sh
+            args: run ci-proj-${{ github.sha }}:latest /proj/.ci/build_project.sh
 
       - name: Test project in container
         uses: actions/docker/cli@master
         with:
-            args: run ci-proj-${{ github.sha }}:latest cd /proj/.ci/test_project.sh
+            args: run ci-proj-${{ github.sha }}:latest /proj/.ci/test_project.sh
