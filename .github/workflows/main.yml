@@ -18,3 +18,17 @@ jobs:
         ./configure --prefix=$PWD/install
         make all
         make install
+    - name: Build docker
+      run: |
+        docker run --rm \
+           -w ${GITHUB_WORKSPACE} \
+           -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
+           build -f .docker/Dockerfile.centos7 -t testimg .
+
+    - name: Run Build in docker
+      run: |
+        docker run --rm \
+           -w ${GITHUB_WORKSPACE} \
+           -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
+           run -i -t testimg .ci/build_project.sh
+
