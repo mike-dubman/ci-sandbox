@@ -16,5 +16,5 @@ RUN yum install -y \
     && yum clean dbcache packages
 
 RUN mkdir /proj
-COPY .git /proj
+COPY .git/ /proj/
 RUN cd /proj && ls -al && git reset --hard
