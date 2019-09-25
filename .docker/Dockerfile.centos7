@@ -15,6 +15,6 @@ RUN yum install -y \
     rdma-core-devel \
     && yum clean dbcache packages
 
-WORKDIR /github/workspace/proj
+WORKDIR /proj
 COPY .git .git
 RUN git reset --hard
