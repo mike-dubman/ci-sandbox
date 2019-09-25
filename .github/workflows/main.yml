@@ -4,9 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-
-      runs-on: ubunty-latest
-    strategy:
+    runs-on: ubunty-latest
     
     steps:
     - uses: actions/checkout@v1
