@@ -3,22 +3,21 @@ name: CI-dockers
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  build_test_docker:
+    name: Build & Test the project
     runs-on: ubuntu-latest
     strategy:
       matrix:
         distro: [centos7]
     
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@master
       - name: Build Docker image
         uses: actions/docker/cli@master
         with:
-          args: >
-              build --tag test --file .ci/Dockerfile.${{ matrix.distro }} .
+            args: build -file .docker/Dockerfile.${{ matrix.distro }} -t ci-proj-${{ github.sha }}:latest .
 
       - name: Running project build
         uses: actions/docker/cli@master
         with:
-            args: run --rm test ls -alR
+            args: run ci-proj-${{ github.sha }}:latest ls -al /proj
