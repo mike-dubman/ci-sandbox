@@ -15,7 +15,7 @@ jobs:
       - name: Build Docker image
         uses: actions/docker/cli@master
         with:
-            args: build -file .docker/Dockerfile.${{ matrix.distro }} -t ci-proj-${{ github.sha }}:latest .
+            args: build -f .docker/Dockerfile.${{ matrix.distro }} -t ci-proj-${{ github.sha }}:latest .
 
       - name: Running project build
         uses: actions/docker/cli@master
