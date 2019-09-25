@@ -4,10 +4,13 @@ on: [push, pull_request]
 
 jobs:
   build:
+    name: Run smoketest
     runs-on: ubunty-latest
     
     steps:
     - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
     - name: Build docker
       run: |
         pwd
