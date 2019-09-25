@@ -14,3 +14,6 @@ RUN yum install -y \
     numactl-devel \
     rdma-core-devel \
     && yum clean dbcache packages
+
+RUN mkdir /proj
+RUN git clone . /proj
