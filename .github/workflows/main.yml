@@ -17,7 +17,9 @@ jobs:
         ls -al
         docker build --rm \
            -f .docker/Dockerfile.centos7 -t testimg .
+
         ls -al
+        touch XXXXXXXXXXXXXXXXXXx
 
     - name: Run Build in docker
       run: |
@@ -27,6 +29,7 @@ jobs:
         docker run --rm \
            -w ${GITHUB_WORKSPACE} \
            -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
-           -i -t testimg .ci/build_project.sh
+           -t testimg .ci/build_project.sh
+
         ls -al
 
