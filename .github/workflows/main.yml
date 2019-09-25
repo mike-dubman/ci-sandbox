@@ -5,23 +5,14 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: ${{ matrix.os }}
+      runs-on: ubunty-latest
     strategy:
-      matrix:
-        os: [ubunty-latest, ubuntu-16.04]
     
     steps:
     - uses: actions/checkout@v1
-    - name: OS ${{ matrix.os }}
-      run: |
-        ./autogen.sh
-        ./configure --prefix=$PWD/install
-        make all
-        make install
     - name: Build docker
       run: |
         docker build --rm \
-           -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
            -f .docker/Dockerfile.centos7 -t testimg .
 
     - name: Run Build in docker
