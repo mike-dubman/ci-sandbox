@@ -12,13 +12,19 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build docker
       run: |
+        pwd
+        ls -al
         docker build --rm \
            -f .docker/Dockerfile.centos7 -t testimg .
+        ls -al
 
     - name: Run Build in docker
       run: |
+        pwd
+        ls -al
         docker run --rm \
            -w ${GITHUB_WORKSPACE} \
            -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
            -i -t testimg .ci/build_project.sh
+        ls -al
 
