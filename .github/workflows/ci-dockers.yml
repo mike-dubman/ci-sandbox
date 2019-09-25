@@ -22,7 +22,7 @@ jobs:
       - name: Build project in container
         uses: actions/docker/cli@master
         with:
-            args: run ci-proj-${{ github.sha }}:latest "ls -alR /proj ${GITHUB_WORKSPACE}; touch ${GITHUB_WORKSPACE}/aaa"
+            args: run ci-proj-${{ github.sha }}:latest "mkdir -p ${GITHUB_WORKSPACE}; ls -alR /proj ${GITHUB_WORKSPACE}; touch ${GITHUB_WORKSPACE}/aaa"
 
       - name: Test project in container
         uses: actions/docker/cli@master
