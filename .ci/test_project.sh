@@ -1,6 +1,6 @@
 #!/bin/bash -eE
+cd $(dirname $0)
 
-instdir="$PWD/install"
 topdir=$(git rev-parse --show-toplevel)
 cd $topdir
 
@@ -8,6 +8,8 @@ if [ ! -d .git ]; then
 	echo "Error: should be run from project root"
 	exit 1
 fi
+
+instdir="$PWD/install"
 
 cd ${instdir}
 ./bin/hello-world1

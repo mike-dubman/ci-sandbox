@@ -1,8 +1,5 @@
 #!/bin/bash -eE
-
-distro=${distro:-"centos7"}
-WORKSPACE=${WORKSPACE:-"$PWD"}
-ws="${distro}/ws"
+cd $(dirname $0)
 
 topdir=$(git rev-parse --show-toplevel)
 cd $topdir
@@ -12,6 +9,10 @@ if [ ! -d .git ]; then
 	echo "Error: should be run from project root"
 	exit 1
 fi
+
+distro=${distro:-"centos7"}
+WORKSPACE=${WORKSPACE:-"$PWD"}
+ws="${distro}/ws"
 
 source .ci/settings.sh
 

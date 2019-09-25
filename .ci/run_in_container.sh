@@ -1,4 +1,5 @@
 #!/bin/bash -eE
+cd $(dirname $0)
 
 image="$1"
 cmd="$2"
