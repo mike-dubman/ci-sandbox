@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        distro: [centos7]
+        distro: [centos7, fedora]
     
     steps:
     - uses: actions/checkout@v1
