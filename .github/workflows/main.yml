@@ -1,4 +1,4 @@
-name: CI
+name: build pipeline
 
 on: [push, pull_request]
 
@@ -6,15 +6,19 @@ jobs:
   build_all:
     name: Run smoketest
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro: [centos7]
     
     steps:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
-    - name: Build docker
+
+    - name: Create docker
       run: |
         docker build --rm \
-           -f .docker/Dockerfile.centos7 -t testimg .
+           -f .docker/Dockerfile.${{ matrix.distro }} -t testimg .
 
     - name: Run Build in docker
       run: |
